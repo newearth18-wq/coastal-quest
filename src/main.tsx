@@ -1,0 +1,10 @@
+import { createRoot } from 'react-dom/client';
+import ClassroomApp from './components/ClassroomApp';
+import { configured } from './integrations/supabase/client';
+import './classquest.css';
+const path = location.pathname;
+const match = /^\/room\/(\d{6})\/?$/.exec(path);
+const params = new URLSearchParams(location.search);
+const pin = match?.[1] || (/^\d{6}$/.test(params.get('room') || '') ? params.get('room')! : undefined);
+const root = createRoot(document.getElementById('root')!);
+root.render(configured ? <ClassroomApp initialView={pin ? 'room' : path.startsWith('/teacher') || params.get('view')==='teacher' ? 'teacher' : 'home'} pin={pin}/> : <main style={{padding:48}}><h1>Coastal Quest</h1><p>กำลังเตรียมระบบห้องเรียน กรุณาตั้งค่า Supabase URL และ Publishable Key ก่อนเผยแพร่</p></main>);

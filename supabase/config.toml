@@ -1,0 +1,3 @@
+[functions.coastal-classroom]
+# This mixed public/student/teacher endpoint authenticates protected actions inside the handler.
+verify_jwt = false

@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {test} from 'node:test';
+import {readFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import QRCode from 'qrcode';
+import jsQR from 'jsqr';
+import png from 'pngjs';
+import {parseQuizCsv} from '../src/lib/csv.ts';
+import {roomJoinUrl} from '../src/lib/room-link.ts';
+test('CSV quoted comma, multiline explanation and answer mapping',()=>{const q=parseQuizCsv('question,optionA,optionB,optionC,optionD,correctAnswer,explanation\r\n"Question, quoted",A,B,C,D,B,"Line 1\nLine 2"');assert.equal(q[0].prompt,'Question, quoted');assert.equal(q[0].correct,1);assert.equal(q[0].explanation,'Line 1\nLine 2');});
+test('QR decodes to the public room URL, without query or auth data',async()=>{for(const [origin,pin] of [['https://school.onrender.com','123456'],['https://school.onrender.com/teacher?session=private','654321']]){const link=roomJoinUrl(origin,pin), image=png.PNG.sync.read(await QRCode.toBuffer(link,{width:768,margin:4,errorCorrectionLevel:'Q'}));assert.equal(jsQR(new Uint8ClampedArray(image.data),image.width,image.height)?.data,link);assert.equal(new URL(link).searchParams.get('room'),pin);assert.deepEqual([...new URL(link).searchParams.keys()],['room']);assert.equal(new URL(link).pathname,'/');}assert.throws(()=>roomJoinUrl('javascript:alert(1)','123456'));assert.throws(()=>roomJoinUrl('https://example.com','123'));});
+test('Actual Unity WASM is preserved byte-for-byte',()=>{const bytes=readFileSync('public/game/Build/game.wasm.unityweb');assert.equal(bytes.length,5387487);assert.equal(createHash('sha256').update(bytes).digest('hex'),'46fcf56656eba1e569940cf38bba31cfa757c6c2ab0592049c45cd9cf90ba3e7');});
