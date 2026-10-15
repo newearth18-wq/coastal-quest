@@ -2,6 +2,10 @@
 
 เกม Unity WebGL พร้อมห้องเรียนภาษาไทย โหมดเดี่ยว ทีม และบอส ใช้ Vite/React บน Render Static Site และ Supabase Edge Functions/PostgreSQL/Auth/Realtime
 
+เว็บไซต์สาธารณะ: https://coastal-quest.onrender.com · หน้าครู: https://coastal-quest.onrender.com/?view=teacher · Source: https://github.com/newearth18-wq/coastal-quest
+
+Render deployment `dep-db87mrbncjis73euv7sg` เป็น live แล้ว ตรวจ HTTP สาธารณะผ่าน 12 รายการ รวมไฟล์ Unity จริงและการตอบคำถามรับทรัพยากร โปรดแยกผลตรวจนี้จากการทดสอบบัญชีครูและการส่งอีเมลซึ่งยังต้องตรวจด้วยผู้ใช้จริง
+
 ## เริ่มพัฒนา
 
 ใช้ Node.js 22.13 ขึ้นไป คัดลอก `.env.example` เป็น `.env.local` แล้วใส่ Supabase URL กับ publishable key ของโปรเจกต์ จากนั้นรัน `npm ci`, `npm run dev` ค่าที่ขึ้นต้น `VITE_` จะออกสู่เบราว์เซอร์ ห้ามใส่ service-role หรือ secret key
@@ -39,7 +43,9 @@
 - Core tests 3 กลุ่มผ่าน: CSV หลายบรรทัด/จุลภาค, decode QR อิสระ, SHA-256 ของ Unity WASM ตรงกับ build เดิม
 - Hosted API 27 checks ผ่านกับ Supabase จริง รวมเข้าห้อง ไม่มีเฉลยรั่ว ส่งคำตอบซ้ำ 5 ครั้งให้รางวัลครั้งเดียว พลัง กระสุน โล่ และ Realtime
 - SQL integration ผ่าน: เจ้าของข้อสอบ คะแนนทีม analytics หยุด/เล่นต่อ snapshot คำถาม เป้าหมายบอส และปิดการเข้าห้องที่จบแล้ว ลบ fixture ใน transaction เดียวกัน
-- ไม่ได้ทดสอบ 60 เครื่องจริง, teacher signup/login/email delivery และ browser WebGL บน Render ใหม่ ยังต้องทดสอบหลังเผยแพร่
+- Public Render HTTP checks 12 รายการผ่าน รวม route หน้าครู/ห้อง ไฟล์ Unity ตรง SHA-256 การรับคำถาม และรางวัล
+- Edge บน Render จริง: โหลด Unity/เข้าฉาก/กด Play Again และตอบ 12×8=96 ได้ กระสุน 18→30 พลัง 0→20 คะแนน 100 การเคลื่อนที่/ยิง/เปลี่ยนอาวุธบนโฮสต์นี้ยังไม่ได้ยืนยันใหม่ครบทุกปุ่ม
+- ยังไม่ได้ทดสอบ 60 เครื่องจริง และ teacher signup/login/email delivery ต้องตรวจด้วยผู้ใช้จริง
 - ฉากต่อสู้แต่ละเครื่องเป็นฉากส่วนตัว แชร์คะแนน เวลา และพลังบอส ยังไม่ซิงก์ตำแหน่งผู้เล่น/PvP และยังไม่มี touch controls
 
 Supabase และ Render ฟรีมีโควตาร่วมกับโปรเจกต์อื่นในบัญชี การอัปเดตถี่หรือใช้พร้อมกันหลายห้องอาจแตะโควตา ต้องดู usage จริง ไม่รับรองว่าใช้ฟรีได้ไม่จำกัด
